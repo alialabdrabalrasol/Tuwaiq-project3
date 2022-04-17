@@ -1,0 +1,94 @@
+-- Database creation.
+create database store;
+
+-- Using the store datebase.
+use store;
+
+-- Creating the countries table along with adding required constraints.
+create table countries(
+code int primary key,
+name varchar(20) unique,
+continent_name varchar(20) not null
+);
+
+-- Creating the users table along with connecting the foreign key and adding required constraints.
+create table users(
+id int primary key,
+full_name varchar(20),
+email varchar(20) unique,
+gender varchar(20) check(gender='m' or gender='f'),
+date_of_birth varchar(15),
+created_at datetime default CURRENT_TIMESTAMP,
+country_code int,
+foreign key(country_code) references countries(code)
+);
+
+-- Creating the orders table along with connecting the foreign key and adding required constraints.
+create table orders(
+id int primary key,
+user_id int,
+status varchar(6) check(status='start' or status='finish'),
+created_at datetime default CURRENT_TIMESTAMP,
+foreign key(user_id) references users(id)
+);
+
+-- Creating the products table along with adding required constraints
+create table products(
+id int primary key,
+name varchar(10) not null,
+price int default 0,
+status varchar(10) check(status='valid' or status='expired'),
+created_at datetime default CURRENT_TIMESTAMP
+);
+
+-- Creating the orders_products table along with connecting foreign keys along with adding required constraints.
+create table order_products(
+order_id int primary key,
+product_id int ,
+quantity int default 0,
+foreign key(order_id) references orders(id),
+foreign key(product_id) references products(id)
+);
+
+
+-- Adding a new row to the countries table.
+insert into countries values (966,"Saudi Arabia","Asia");
+/*
+select * from countries;
+*/
+
+
+-- Adding a new row to the users table.
+insert into users(id,full_name,email,gender,date_of_birth,country_code)
+values (1,"Ali Alabdrabalrasol","ali@gmail.com","m","10/01/1998",966);
+/*
+select * from users;
+*/
+
+
+-- Adding a new row to the orders table.
+insert into orders(id,user_id,status) values(1,1,"start");
+/*
+select * from orders;
+*/
+
+
+-- Adding a new row to the products table.
+insert into products(id,name,price,status) values(1,'item1',1,'valid');
+/*
+select * from products;
+*/
+
+-- Adding a new row to the order_products table.
+insert into order_products values(1,1,5);
+/*
+select * from order_products;
+*/
+
+-- Updating row from countries table.
+update countries
+set name = "KSA"
+where code =966;
+
+--Deleting from products table
+delete from products where id=1;
